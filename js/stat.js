@@ -9,7 +9,8 @@ var RECT_Y = CLOUD_Y + 230;
 var GAP = 10;
 var GAP_WIDTH = 50;
 var TEXT_WIDTH = 40;
-var BAR_HEIGHT = -150;
+var BAR_GAP = -150;
+var TEXT_GAP = 40;
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -24,15 +25,12 @@ var getMaxElement = function (arr) {
       maxElement = arr[i];
     }
   }
-
   return maxElement;
 };
-
 
 window.renderStatistics = function (ctx, players, times) {
   renderCloud(ctx, CLOUD_X + 10, CLOUD_Y + 10, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
-
 
   var maxTime = getMaxElement(times);
 
@@ -40,7 +38,6 @@ window.renderStatistics = function (ctx, players, times) {
   ctx.font = '16px PT Mono';
   ctx.fillText('Ура вы победили!', CLOUD_X + 25, CLOUD_Y + 25);
   ctx.fillText('Список результатов:', CLOUD_X + 25, CLOUD_Y + 50);
-
 
   for (var i = 0; i < players.length; i++) {
 
@@ -52,10 +49,15 @@ window.renderStatistics = function (ctx, players, times) {
       var randomSat = getRandomSat();
       ctx.fillStyle = 'hsl(240,' + randomSat + '%,50%)';
     }
-    ctx.fillRect(TEXT_X + (TEXT_WIDTH + GAP_WIDTH) * i, RECT_Y, TEXT_WIDTH, (BAR_HEIGHT * times[i]) / maxTime);
+    var barHeight = (BAR_GAP * times[i]) / maxTime;
+    ctx.fillRect(TEXT_X + (TEXT_WIDTH + GAP_WIDTH) * i, RECT_Y, TEXT_WIDTH, barHeight);
+    ctx.fillStyle = '#000';
+
+    var roundedValue = Math.floor(times[i]);
+    ctx.fillText(roundedValue, TEXT_X + (TEXT_WIDTH + GAP_WIDTH) * i, CLOUD_HEIGHT - TEXT_GAP + barHeight);
   }
 };
 
-function getRandomSat() {
-  return Math.floor(Math.random() * Math.floor(100));
-}
+var getRandomSat = function () {
+  return Math.floor(Math.random() * 100);
+};
